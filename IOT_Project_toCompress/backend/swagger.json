@@ -1,0 +1,207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IoT Monitoring & Control System API - Lê Thế Hoàng (B23DCCN331)",
+    "version": "1.0.0",
+    "description": "Tài liệu đặc tả và kiểm thử RESTful API cho hệ thống IoT giám sát nhiệt độ, độ ẩm, ánh sáng và điều khiển thiết bị."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    { "name": "Auth", "description": "Xác thực và đăng ký tài khoản" },
+    { "name": "Users", "description": "Thông tin hồ sơ cá nhân" },
+    { "name": "Sensors", "description": "Giám sát và tra cứu dữ liệu cảm biến" },
+    { "name": "Devices", "description": "Điều khiển thiết bị và lịch sử hoạt động" }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Đăng ký tài khoản người dùng mới",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "hoanglt" },
+                  "password": { "type": "string", "example": "123456" },
+                  "full_name": { "type": "string", "example": "Lê Thế Hoàng" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Đăng ký tài khoản thành công" },
+          "400": { "description": "Tên đăng nhập đã tồn tại trong hệ thống" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Đăng nhập hệ thống và cấp JWT Token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "admin@iotptit.vn" },
+                  "password": { "type": "string", "example": "123456" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Đăng nhập thành công" },
+          "401": { "description": "Tên đăng nhập hoặc mật khẩu không chính xác" }
+        }
+      }
+    },
+    "/api/sensor-data/latest": {
+      "get": {
+        "tags": ["Sensors"],
+        "summary": "Lấy dữ liệu cảm biến mới nhất (Nhiệt độ, Độ ẩm, Ánh sáng)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lấy dữ liệu cảm biến mới nhất thành công" }
+        }
+      }
+    },
+    "/api/sensor-data/chart": {
+      "get": {
+        "tags": ["Sensors"],
+        "summary": "Lấy 10 mốc dữ liệu gần nhất phục vụ biểu đồ (Monitoring Chart)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Thành công" }
+        }
+      }
+    },
+    "/api/sensor-data/history": {
+      "get": {
+        "tags": ["Sensors"],
+        "summary": "Truy vấn và phân trang lịch sử dữ liệu cảm biến",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } },
+          {
+            "name": "filterType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Nhiệt độ (DHT11)", "Độ ẩm (DHT11)", "Độ sáng (CBAS)", "VALUE", "TIME"]
+            },
+            "description": "Loại bộ lọc (theo tên cảm biến, theo giá trị VALUE, hoặc theo thời gian TIME)"
+          },
+          {
+            "name": "searchValue",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Từ khóa tìm kiếm khi chọn filterType là VALUE hoặc TIME"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Thành công" }
+        }
+      }
+    },
+    "/api/devices": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Lấy danh sách và trạng thái thực tế của thiết bị",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Thành công" }
+        }
+      }
+    },
+    "/api/devices/{id}/control": {
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Gửi lệnh điều khiển Bật/Tắt thiết bị qua MQTT (Timeout 5s)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 },
+            "description": "ID thiết bị (1: Quạt, 2: Đèn, 3: Điều hòa)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "command": { "type": "string", "enum": ["ON", "OFF", "Bật", "Tắt"], "example": "ON" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Điều khiển thiết bị thành công" },
+          "504": { "description": "Thiết bị không phản hồi (Timeout)" }
+        }
+      }
+    },
+    "/api/actions/history": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Truy vấn nhật ký lịch sử điều khiển thiết bị",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } },
+          {
+            "name": "device_name",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["ALL", "Quạt", "Đèn", "Điều hòa"] }
+          },
+          {
+            "name": "command",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["ALL", "ON", "OFF", "Bật", "Tắt"] }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["ALL", "SUCCESS", "FAILED", "Thành công", "Thất bại"] }
+          },
+          {
+            "name": "timeSearch",
+            "in": "query",
+            "schema": { "type": "string" },
+            "description": "Tìm kiếm theo chuỗi thời gian (VD: 2026-08-17 hoặc 14:35)"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Thành công" }
+        }
+      }
+    }
+  }
+}

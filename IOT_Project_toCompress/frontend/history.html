@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History - IOT PTIT</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="brand-container">
+          <div class="brand-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span class="brand-title">IOT PTIT</span>
+        </div>
+
+        <nav class="nav-list">
+          <a href="dashboard.html" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+          <a href="sensor-data.html" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Sensor Data</span>
+          </a>
+
+          <a href="history.html" class="nav-link active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>History</span>
+          </a>
+
+          <a href="profile.html" class="nav-link">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>Profile</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Khối nút Đăng xuất -->
+      <div class="logout-box">
+        <a href="index.html" class="logout-link">
+          <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>Đăng xuất</span>
+        </a>
+      </div>
+    </aside>
+
+    <main class="main-viewport">
+      <div class="page-header header-icon-title">
+        <div class="header-icon-box">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2>Lịch sử hoạt động</h2>
+      </div>
+
+      <div class="content-table-card">
+        <!-- [BỘ LỌC] 3 dropdown + 1 ô search thời gian + 1 nút Tìm kiếm hình kính lúp -->
+        <div class="filters-row-4">
+          <!-- Dropdown 1: Lọc theo thiết bị -->
+          <div class="filter-select-wrapper">
+            <select id="historyFilterDevice" class="filter-select">
+              <option value="ALL" hidden selected>Lọc theo thiết bị...</option>
+              <option value="ALL">Tất cả</option>
+              <option value="Quạt">Quạt</option>
+              <option value="Đèn">Đèn</option>
+              <option value="Điều hòa">Điều hòa</option>
+            </select>
+            <div class="select-arrow">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Dropdown 2: Lọc theo hành động -->
+          <div class="filter-select-wrapper">
+            <select id="historyFilterAction" class="filter-select">
+              <option value="ALL" hidden selected>Lọc theo hành động...</option>
+              <option value="ALL">Tất cả</option>
+              <option value="Bật">Bật</option>
+              <option value="Tắt">Tắt</option>
+            </select>
+            <div class="select-arrow">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Dropdown 3: Lọc theo trạng thái -->
+          <div class="filter-select-wrapper">
+            <select id="historyFilterStatus" class="filter-select">
+              <option value="ALL" hidden selected>Lọc theo trạng thái...</option>
+              <option value="ALL">Tất cả</option>
+              <option value="Thành công">Thành công</option>
+              <option value="Đang chờ">Đang chờ</option>
+              <option value="Thất bại">Thất bại</option>
+            </select>
+            <div class="select-arrow">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Ô search theo thời gian -->
+          <div>
+            <input type="text" id="historySearchTime" onkeydown="if(event.key==='Enter') handleHistorySearch()" placeholder="Tìm kiếm theo thời gian..." class="filter-input">
+          </div>
+
+          <!-- Nút Tìm kiếm hình kính lúp -->
+          <button type="button" onclick="handleHistorySearch()" class="btn-search" title="Tìm kiếm">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bảng lịch sử — id="historyTableBody" để main.js bơm <tr> -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 12%;">ID</th>
+                <th style="width: 18%;">THIẾT BỊ</th>
+                <th style="width: 14%;">HÀNH ĐỘNG</th>
+                <th style="width: 18%;">TRẠNG THÁI</th>
+                <th style="width: 16%;">USER</th>
+                <th style="width: 22%;">THỜI GIAN</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Render động từ renderHistoryTable() ở main.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- [PHÂN TRANG] -->
+        <div class="pagination-container">
+          <div class="pagination-info">
+            <span>Hiển thị</span>
+            <select id="historyPageSize" onchange="changeHistoryPageSize()" class="pagination-select">
+              <option value="8" selected>8</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+            </select>
+            <span>trong tổng số <strong id="historyTotalRecords" style="color: #0f172a;">248</strong> bản ghi</span>
+          </div>
+
+          <div class="pagination-buttons" id="historyPaginationButtons">
+            <!-- Nút phân trang render từ main.js -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
